@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,9 +44,12 @@ public class UserRestController {
 
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> saveUser(@RequestBody User user) {
+		User userExists = service.findByUsername(user.getUsername());
+		
+		if (userExists != null) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		} 
 		Integer id = service.saveUser(user);
-
-		// String username = service.findUserById(id).getUsername();
 
 		String token = jwtUtil.generateToken(user.getUsername());
 		

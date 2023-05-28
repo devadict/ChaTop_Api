@@ -28,6 +28,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	private BCryptPasswordEncoder pwdEncoder;
 
 	public Integer saveUser(User user) {
+		
+
 		user.setPassword(pwdEncoder.encode(user.getPassword()));
 		user.setUpdated_at(LocalDateTime.now());
 		user.setUsername(user.getEmail());

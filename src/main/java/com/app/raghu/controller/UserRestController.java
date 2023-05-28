@@ -90,21 +90,4 @@ public class UserRestController {
 
 		return ResponseEntity.ok(user);
 	}
-	
-	// @GetMapping("/me")
-	// public void moi(Principal p) {
-	// 	String username = p.getName();
-
-	// 	// Authentication authentication = SecurityContextHolder.getContext().getAuthentication().getDetails();
-
-	// 	// String name = authentication.getName();
-
-	// 	// Optional<User> user = userRepository.findByUsername(name);
-		
-	// 	System.out.println(SecurityContextHolder.getContext().getAuthentication().getDetails());		
-	// }
-	
-	
-
-
 }

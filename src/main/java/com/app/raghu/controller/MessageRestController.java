@@ -30,11 +30,6 @@ import com.app.raghu.service.IUserService;
 @RestController
 @RequestMapping("api/messages")
 public class MessageRestController {
-    // @Autowired
-    // private MessageRepository messageRepository;
-
-    // @Autowired
-    // private RentalRepository rentalRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -57,11 +52,13 @@ public class MessageRestController {
         
         int owner = user.getId();
 
-        final Integer rentalId = rentalService.getOneRental(message.getRental_id()).getId();
+        Optional<Rental> rental = rentalService.getOneRental(message.getRental_id());
 
-        if (rentalId == null) {
+        if (rental.isEmpty()) {
             return new ResponseEntity<>(new StringResponse("rental does not exist"), HttpStatus.NOT_FOUND);
         }
+
+        Integer rentalId = rental.get().getId();
 
         message.setUser_id(owner);
         message.setRental_id(rentalId);

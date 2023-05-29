@@ -61,22 +61,20 @@ public class RentalRestController {
 
         User user = userRepository.findByUsername(username).get();
 
-        int owner = user.getId();
-
-        String picture;
-        
-        picture = UploadPhoto.uploadPicture(rentalRequest.getPicture());
-        
+        int owner = user.getId();        
 
         RentalResponse rental = new RentalResponse();
         rental.setName(rentalRequest.getName());
         rental.setSurface(rentalRequest.getSurface());
         rental.setPrice(rentalRequest.getPrice());
         rental.setDescription(rentalRequest.getDescription());
-        rental.setPicture(picture);
+        if (rentalRequest.getPicture() != null) {
+            String picture = UploadPhoto.uploadPicture(rentalRequest.getPicture());
+            rental.setPicture(picture);
+        }
         rental.setOwner_id(owner);
 
-       Rental newRental = service.save(rental);
+        service.save(rental);
 
         return ResponseEntity.ok(new StringResponse("Rental Created"));
     }
@@ -88,9 +86,14 @@ public class RentalRestController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Rental> getOneRental(@PathVariable Integer id)
+    public ResponseEntity<Optional<Rental>> getOneRental(@PathVariable Integer id)
     {
-        return ResponseEntity.ok(service.getOneRental(id));
+        Optional<Rental> rental = service.getOneRental(id);
+        if (rental.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(rental);
     }
 
     @PutMapping("/{id}")

@@ -58,9 +58,9 @@ public class RentalServiceImpl implements IRentalService {
         return new ListRentalResponse(rental);
     }
 
-    public Rental getOneRental(Integer id) {
+    public Optional<Rental> getOneRental(Integer id) {
         Optional<Rental> rental = rentalRepository.findById(id);
-        return rental.orElse(null);
+        return rental;
     
     }
     

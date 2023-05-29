@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -96,6 +97,10 @@ public class RentalRestController {
     public ResponseEntity<StringResponse> update(@RequestParam("name") String name, @RequestParam("price") Double price, @RequestParam("surface") Double surface, @RequestParam("description") String description, @PathVariable int id)
     {
         Optional<Rental> optionalRental = rentalRepository.findById(id);
+
+        if (optionalRental.isEmpty()) {
+            return new ResponseEntity<>(new StringResponse("Rental does not exist"), HttpStatus.NOT_FOUND);
+        }
         
         Rental updatedRental = optionalRental.get();
         updatedRental.setName(name);

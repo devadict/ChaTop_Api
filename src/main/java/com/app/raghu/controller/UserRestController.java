@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,16 +61,21 @@ public class UserRestController {
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> loginUser(@RequestBody UserRequest userRequest)
 	{
+
 		String username = userRequest.getEmail();
+		try {
 
-		authenticationManager.authenticate(
+			authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
-						username, 
-						userRequest.getPassword()
-						)
-				);
+					username, 
+					userRequest.getPassword()
+				)
+			);
+		} catch (AuthenticationException e)  {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 
-				String token = jwtUtil.generateToken(username);
+		String token = jwtUtil.generateToken(username);
 		
 
 		return ResponseEntity.ok(new UserResponse(token));

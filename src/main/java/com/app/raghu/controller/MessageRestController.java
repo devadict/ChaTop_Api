@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +30,11 @@ import com.app.raghu.service.IUserService;
 @RestController
 @RequestMapping("api/messages")
 public class MessageRestController {
-    @Autowired
-    private MessageRepository messageRepository;
+    // @Autowired
+    // private MessageRepository messageRepository;
 
-    @Autowired
-    private RentalRepository rentalRepository;
+    // @Autowired
+    // private RentalRepository rentalRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -50,9 +51,17 @@ public class MessageRestController {
 
         User user = userRepository.findByUsername(username).get();
 
+        if (user == null) {
+            return new ResponseEntity<>(new StringResponse("user does not exist"), HttpStatus.NOT_FOUND);
+        }
+        
         int owner = user.getId();
 
         final Integer rentalId = rentalService.getOneRental(message.getRental_id()).getId();
+
+        if (rentalId == null) {
+            return new ResponseEntity<>(new StringResponse("rental does not exist"), HttpStatus.NOT_FOUND);
+        }
 
         message.setUser_id(owner);
         message.setRental_id(rentalId);

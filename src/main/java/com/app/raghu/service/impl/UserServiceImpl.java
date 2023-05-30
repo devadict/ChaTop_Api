@@ -27,13 +27,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	@Autowired
 	private BCryptPasswordEncoder pwdEncoder;
 
-	public Integer saveUser(User user) {
-		
+	public User saveUser(User user) {
 
 		user.setPassword(pwdEncoder.encode(user.getPassword()));
 		user.setUpdated_at(LocalDateTime.now());
 		user.setUsername(user.getEmail());
-		return repository.save(user).getId();
+		return repository.save(user);
 	}
 
 	public User findByUsername(String username) {

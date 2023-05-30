@@ -25,15 +25,19 @@ public class DetailsService {
 		String username = p.getName();
 
 		User user = userRepository.findByUsername(username).get();
-		int userId = user.getId();
 
 		return ResponseEntity.ok(user);
 	}
 
     @GetMapping("/{id}")
-	public ResponseEntity<Integer> me(@PathVariable Integer id) {
+	public ResponseEntity<User> me(@PathVariable Integer id, Principal p) {
+		String username = p.getName();
 
-		Integer user = userRepository.findById(id).get().getId();
+		Integer userId = userRepository.findByUsername(username).get().getId();
+
+		id = userId;
+
+		User user = userRepository.findById(id).get();
 		
 
 		return ResponseEntity.ok(user);

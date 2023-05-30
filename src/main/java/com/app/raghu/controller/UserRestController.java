@@ -48,9 +48,10 @@ public class UserRestController {
 		User userExists = service.findByUsername(user.getUsername());
 		
 		if (userExists != null) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		} 
-		Integer id = service.saveUser(user);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		
+		service.saveUser(user);
 
 		String token = jwtUtil.generateToken(user.getUsername());
 		
@@ -81,18 +82,17 @@ public class UserRestController {
 		return ResponseEntity.ok(new UserResponse(token));
 	}
 	
-	@PostMapping("/welcome")
-	public ResponseEntity<String> accessUserData(Principal p) {
 
-		return ResponseEntity.ok("Hello user:" + p.getName());
-	}
 	
 	@GetMapping("/me")
-	public ResponseEntity<User> me(Principal p) {
+	public ResponseEntity<Optional<User>> me(Principal p) {
 		String username = p.getName();
 
-		User user = userRepository.findByUsername(username).get();
-		int userId = user.getId();
+		Optional<User> user = userRepository.findByUsername(username);
+
+		if (user.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 
 		return ResponseEntity.ok(user);
 	}

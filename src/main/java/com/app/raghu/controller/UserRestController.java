@@ -47,9 +47,9 @@ public class UserRestController {
 	public ResponseEntity<UserResponse> saveUser(@RequestBody User user) {
 		User userExists = service.findByUsername(user.getUsername());
 		
-		if (userExists != null) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		// if (userExists != null) {
+		// 	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		// }
 		
 		service.saveUser(user);
 

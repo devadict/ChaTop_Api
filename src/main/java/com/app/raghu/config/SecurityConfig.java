@@ -84,16 +84,20 @@ public class SecurityConfig {
 
 
 	@Bean
-	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-		.authorizeRequests().antMatchers("/api/auth/register", "/api/auth/login").permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.exceptionHandling()
-		.authenticationEntryPoint(authenticationEntryPoint)
-		.and()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
-		return http.build();
-	}
+public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    http.csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/api/auth/register", "/api/auth/login").permitAll()
+            .antMatchers("/images/**").permitAll() // Allow access to the images folder
+            .anyRequest().authenticated()
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPoint)
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}
+
 }

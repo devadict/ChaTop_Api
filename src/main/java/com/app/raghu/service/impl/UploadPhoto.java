@@ -1,32 +1,48 @@
 package com.app.raghu.service.impl;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
-@Service
 public class UploadPhoto {
-    public static String uploadPicture(MultipartFile picture) throws IOException {
-        String fileName = StringUtils.cleanPath(picture.getOriginalFilename());
+    private final static String HOSTNAME = "localhost";
+    private final static String SERVER_PORT = "3001";
+    private final static String UPLOAD_FOLDER = "images";
 
-        // Specify the directory path where you want to store the file
-        String directoryPath = "src/main/java/com/app/raghu/images";
+    public static String uploadPicture(MultipartFile multipartFile) {
+        try {
+            Path uploadPath = Paths.get("src/main/resources/static", UPLOAD_FOLDER).normalize();
 
-        Path filePath = Paths.get(directoryPath).resolve(fileName);
+            // Create directory if not found
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
-        try (OutputStream os = Files.newOutputStream(filePath)) {
-            os.write(picture.getBytes());
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                String filename = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+                Path filePath = uploadPath.resolve(filename);
+
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                return getFileUrl(filename);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        String newPic = filePath.toString();
+        return null;
+    }
 
-        return newPic;
+    private static String getFileUrl(String filename) {
+        String url = String.format("http://%s:%s/images/%s", HOSTNAME, SERVER_PORT, filename);
+        return UriComponentsBuilder.fromHttpUrl(url).toUriString();
     }
 }

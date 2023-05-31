@@ -16,8 +16,10 @@ public class UploadPhoto {
     public static String uploadPicture(MultipartFile picture) throws IOException {
         String fileName = StringUtils.cleanPath(picture.getOriginalFilename());
 
-        Path tempDir = Files.createTempDirectory(Paths.get("src"), "picture");
-        Path filePath = tempDir.resolve(fileName);
+        // Specify the directory path where you want to store the file
+        String directoryPath = "src/main/java/com/app/raghu/images";
+
+        Path filePath = Paths.get(directoryPath).resolve(fileName);
 
         try (OutputStream os = Files.newOutputStream(filePath)) {
             os.write(picture.getBytes());

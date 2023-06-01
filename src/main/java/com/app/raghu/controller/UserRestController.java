@@ -45,11 +45,12 @@ public class UserRestController {
 
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> saveUser(@RequestBody User user) {
-		User userExists = service.findByUsername(user.getUsername());
+		Optional<User> userExists = userRepository.findByUsername(user.getUsername());
 		
-		// if (userExists != null) {
-		// 	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		// }
+		if (userExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body(new UserResponse("Username already exists"));
+		}
 		
 		service.saveUser(user);
 

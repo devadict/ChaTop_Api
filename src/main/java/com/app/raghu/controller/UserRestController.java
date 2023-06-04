@@ -26,7 +26,11 @@ import com.app.raghu.repository.UserRepository;
 import com.app.raghu.service.IUserService;
 import com.app.raghu.util.JwtUtil;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
+@Api(value = "Authentication REST Endpoint", description = "Allows the authentication of an user")
 @RequestMapping("/api/auth")
 @Service
 public class UserRestController {
@@ -43,6 +47,7 @@ public class UserRestController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
+	@ApiOperation(value = "Registers the user if email does not exists already")
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> saveUser(@RequestBody User user) {
 		Optional<User> userExists = userRepository.findByUsername(user.getUsername());
@@ -60,6 +65,7 @@ public class UserRestController {
 		return ResponseEntity.ok(new UserResponse(token));
 	}
 
+	@ApiOperation("Logs the user in if credentials are good")
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> loginUser(@RequestBody UserRequest userRequest)
 	{
@@ -84,7 +90,7 @@ public class UserRestController {
 	}
 	
 
-	
+	@ApiOperation(value = "Retrieve users informations")
 	@GetMapping("/me")
 	public ResponseEntity<Optional<User>> me(Principal p) {
 		String username = p.getName();

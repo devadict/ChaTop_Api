@@ -27,6 +27,10 @@ import com.app.raghu.service.IMessageService;
 import com.app.raghu.service.IRentalService;
 import com.app.raghu.service.IUserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(value = "Messages REST Endpoint", description = "Manipulates messages")
 @RestController
 @RequestMapping("api/messages")
 public class MessageRestController {
@@ -40,6 +44,7 @@ public class MessageRestController {
     @Autowired
     private IRentalService rentalService;
 
+    @ApiOperation(value = "Sends a message that relates to a single rental")
     @PostMapping
     public ResponseEntity<StringResponse> createMessage(@RequestBody Message message, Principal p) {
         String username = p.getName();
@@ -69,11 +74,5 @@ public class MessageRestController {
   
 
         return ResponseEntity.ok(new StringResponse("Message sent"));
-    }
-
-    @GetMapping()
-    public ResponseEntity<List<Message>> getAllMessages() {
-
-        return ResponseEntity.ok(messageService.getAllMessages());
     }
 }

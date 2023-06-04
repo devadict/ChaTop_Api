@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.raghu.entity.User;
 import com.app.raghu.repository.UserRepository;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api/user")
+@Api(value = "User ressources endpoint", description = "Shows the users info")
 @Service
 public class DetailsService {
     @Autowired
@@ -29,6 +33,7 @@ public class DetailsService {
 		return ResponseEntity.ok(user);
 	}
 
+	@ApiOperation(value = "Get yser user info from its Id")
     @GetMapping("/{id}")
 	public ResponseEntity<User> me(@PathVariable Integer id, Principal p) {
 		String username = p.getName();

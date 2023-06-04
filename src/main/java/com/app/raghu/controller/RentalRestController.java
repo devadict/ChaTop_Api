@@ -41,9 +41,12 @@ import com.app.raghu.service.IRentalService;
 import com.app.raghu.service.impl.UploadPhoto;
 
 import antlr.StringUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("api/rentals")
+@Api(value = "Rental resources REST Endpoint", description = "Manipulate rentals")
 public class RentalRestController {
 
     @Autowired
@@ -55,7 +58,9 @@ public class RentalRestController {
     @Autowired
     private IRentalService service;
 
+    
     @PostMapping
+    @ApiOperation(value = "Post a rental")
     public ResponseEntity<StringResponse> createRental(@ModelAttribute RentalRequest rentalRequest, Principal p) throws IOException {
         String username = p.getName();
 
@@ -80,12 +85,14 @@ public class RentalRestController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Get all rentals")
     public ListRentalResponse getAllRentals()
     {
         return service.getAllRentals();
     }
     
     @GetMapping("/{id}")
+    @ApiOperation("Get a single rental")
     public ResponseEntity<Optional<Rental>> getOneRental(@PathVariable Integer id)
     {
         Optional<Rental> rental = service.getOneRental(id);
@@ -97,6 +104,7 @@ public class RentalRestController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Get a single rental and update it")
     public ResponseEntity<StringResponse> update(@RequestParam("name") String name, @RequestParam("price") Double price, @RequestParam("surface") Double surface, @RequestParam("description") String description, @PathVariable int id)
     {
         Optional<Rental> optionalRental = rentalRepository.findById(id);

@@ -24,14 +24,6 @@ public class DetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/me")
-	public ResponseEntity<User> me(Principal p) {
-		String username = p.getName();
-
-		User user = userRepository.findByUsername(username).get();
-
-		return ResponseEntity.ok(user);
-	}
 
 	@ApiOperation(value = "Get yser user info from its Id")
     @GetMapping("/{id}")

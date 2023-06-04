@@ -89,6 +89,7 @@ public SecurityFilterChain configure(HttpSecurity http) throws Exception {
             .authorizeRequests()
             .antMatchers("/api/auth/register", "/api/auth/login").permitAll()
             .antMatchers("/images/**").permitAll() // Allow access to the images folder
+            .antMatchers( "/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs/**").permitAll() // Adding Swagger
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()

@@ -50,7 +50,8 @@ public class UserRestController {
 	@ApiOperation(value = "Registers the user if email does not exists already")
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> saveUser(@RequestBody User user) {
-		Optional<User> userExists = userRepository.findByUsername(user.getUsername());
+		Optional<User> userExists = userRepository.findByUsername(user.getEmail());
+		// Integer userId = userExists.get().getId();
 		
 		if (userExists.isPresent()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)

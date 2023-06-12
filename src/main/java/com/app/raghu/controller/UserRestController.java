@@ -51,7 +51,6 @@ public class UserRestController {
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> saveUser(@RequestBody User user) {
 		Optional<User> userExists = userRepository.findByUsername(user.getEmail());
-		// Integer userId = userExists.get().getId();
 		
 		if (userExists.isPresent()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)
